@@ -15,9 +15,11 @@ class ProjetoApp {
 
 class ProjetoFrame extends JFrame {
     ArrayList<Figure> figs = new ArrayList<Figure>();
+    ArrayList<Figure> points = new ArrayList<Figure>();
     Random rand = new Random();
 
     private int mouseCordx,mouseCordy;
+    private int mouseClickx, mouseClicky;
     private Figure selectedFigure;
     private Retangulo selectedRect;
 
@@ -27,6 +29,8 @@ class ProjetoFrame extends JFrame {
     private boolean r = false, g = false, b = false;
 
     ProjetoFrame () {
+
+        createPoints();
 
         this.addWindowListener (new WindowAdapter() {
                 public void windowClosing (WindowEvent e) {
@@ -118,15 +122,23 @@ class ProjetoFrame extends JFrame {
                     if (evt.getKeyChar() == 'r') {
                         Retangulo r = new Retangulo(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2});
                         figs.add(r);
+
                     } else if (evt.getKeyChar() == 'e') {
                         figs.add(new Elipse(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+
+                    } else if (evt.getKeyCode() == 127) { // del //
+                        figs.remove(selectedFigure);
+                        selectedFigure = null;
+                        selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
                     } repaint();
                 }
         });
 
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed (MouseEvent evt) {
-                selectFigure(evt.getX(),evt.getY());
+                mouseClickx = evt.getX();
+                mouseClicky = evt.getY();
+                selectFigure(mouseClickx,mouseClicky);
             }
         });
 
@@ -137,11 +149,18 @@ class ProjetoFrame extends JFrame {
             }
 
             public void mouseDragged(MouseEvent evt) {
+
+                /*if (isPoint(mouseClickx, mouseClicky)) {
+                    selectedFigure.resize(evt.getX(), evt.getY(),whichPoint(evt.getX(), evt.getY()));
+                }*/
+                
                 if (selectedFigure instanceof Figure) {
                     selectedFigure.drag(evt.getX(), evt.getY());
                     selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
-                    repaint();
+                    plotPoints();
                 }
+
+                repaint();
             }
         });
 
@@ -150,7 +169,12 @@ class ProjetoFrame extends JFrame {
     }
 
     private void selectFigure(int x, int y) {
-        if(!figs.isEmpty()) {
+
+        if (isPoint(x,y)) {
+            return;
+        }
+
+        if (!figs.isEmpty()) {
 
             selectedFigure = null;
 
@@ -167,12 +191,67 @@ class ProjetoFrame extends JFrame {
                 figs.remove(selectedFigure);
                 figs.add(selectedFigure);
                 selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
-                repaint();
+                plotPoints(true);
+
             } else {
                 selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
-                repaint();
-            }
+                plotPoints(false);
+            } repaint();
         }
+    }
+
+    private void createPoints () {
+
+        if (selectedFigure == null) {
+
+            Elipse p1 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
+            Elipse p2 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
+            Elipse p3 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
+            Elipse p4 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
+            points.add(p1);
+            points.add(p2);
+            points.add(p3);
+            points.add(p4);
+        }
+
+        System.out.println(points.size());
+    }
+
+    private void plotPoints(boolean p) {
+
+        if (p) {
+
+            int x = selectedFigure.getPosx()-5;
+            int y = selectedFigure.getPosy()-5;
+            int w = selectedFigure.getWidth()+5;
+            int h = selectedFigure.getHight()+5;
+
+            points.set(0, new Elipse(x + w/2,y,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
+            points.set(1, new Elipse(x,y + h/2,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
+            points.set(2, new Elipse(x + w/2,y + h,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
+            points.set(3, new Elipse(x + w,y + h/2,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
+        } else {
+            points.set(0, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
+            points.set(1, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
+            points.set(2, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
+            points.set(3, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
+        }
+    }
+
+    private boolean isPoint(int x, int y) {
+        for (Figure p: this.points) {
+            if (p.getPosx() <= x && x <= p.getPosx() + p.getWidth() && p.getPosy() <= y && y <= p.getPosy() + p.getHight()) { 
+                return true;
+            }
+        } return false;
+    }
+
+    private Figure whichPoint(int x, int y) {
+        for (Figure p: this.points) {
+            if (p.getPosx() <= x && x <= p.getPosx() + p.getWidth() && p.getPosy() <= y && y <= p.getPosy() + p.getHight()) { 
+                return p;
+            }
+        } return null;
     }
 
     public void paint (Graphics g) {
@@ -180,6 +259,8 @@ class ProjetoFrame extends JFrame {
         for (Figure fig: this.figs) {
             fig.paint(g);
         }
-        if(selectedRect != null) selectedRect.paint(g);
+        if (selectedRect != null) selectedRect.paint(g);
+
+        if (!points.isEmpty()) for (Figure point: this.points) point.paint(g);
     }
 }
