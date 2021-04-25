@@ -130,6 +130,7 @@ class ProjetoFrame extends JFrame {
                         figs.remove(selectedFigure);
                         selectedFigure = null;
                         selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
+                        plotPoints(false);
                     } repaint();
                 }
         });
@@ -157,7 +158,7 @@ class ProjetoFrame extends JFrame {
                 if (selectedFigure instanceof Figure) {
                     selectedFigure.drag(evt.getX(), evt.getY());
                     selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
-                    plotPoints();
+                    plotPoints(true);
                 }
 
                 repaint();
