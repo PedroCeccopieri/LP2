@@ -32,23 +32,15 @@ public abstract class Figure {
     	this.posy = y;
     }
 
-    /*public void resize(int x, int y, Figure p) {
-    	if (p.getPosx() == (this.posx-5) + (this.width+5)/2 && p.getPosy() == this.posy-5) {
-    		System.out.println("topo");
-    	} 
-
-    	else if (p.getPosx() == (this.posx-5) && p.getPosy() == this.posy-5 + (this.hight+5)/2) {
-    		System.out.println("esquerda");
+    public void resize(int dx, int dy) {
+    	if (dx != 0) {
+    		this.width += dx;
     	}
 
-    	else if (p.getPosx() == (this.posx-5) + (this.width+5)/2 && p.getPosy() == this.posy + this.hight) {
-    		System.out.println("base");
+    	if (dy != 0) {
+    		this.hight += dy;
     	}
-
-    	else if (p.getPosx() == this.posx + this.width && p.getPosy() == this.posy-5 + (this.hight+5)/2) {
-    		System.out.println("direita");
-    	}
-    }*/
+    }
 
     public void changeStroke(int n) {
     	if (this.stroke >= 0 && this.stroke + n >= 0) this.stroke += n;
@@ -56,16 +48,16 @@ public abstract class Figure {
     }
 
     public void changeBackgroundColor(int r, int g, int b) {
-    	if (this.backgroundColor[0] > 0 && this.backgroundColor[0] < 255) this.backgroundColor[0] += r;
-    	if (this.backgroundColor[1] > 0 && this.backgroundColor[1] < 255) this.backgroundColor[1] += g;
-    	if (this.backgroundColor[2] > 0 && this.backgroundColor[2] < 255) this.backgroundColor[2] += b;
+    	if (this.backgroundColor[0] + r >= 0 && this.backgroundColor[0] + r <= 255) this.backgroundColor[0] += r;
+    	if (this.backgroundColor[1] + g >= 0 && this.backgroundColor[1] + g <= 255) this.backgroundColor[1] += g;
+    	if (this.backgroundColor[2] + b >= 0 && this.backgroundColor[2] + b <= 255) this.backgroundColor[2] += b;
     	System.out.format("%d %d %d\n", this.backgroundColor[0],this.backgroundColor[1],this.backgroundColor[2]);
     }
 
     public void changeStrokeColor(int r, int g, int b) {
-    	if (this.strokeColor[0] > 0 && this.strokeColor[0] < 255) this.strokeColor[0] += r;
-    	if (this.strokeColor[1] > 0 && this.strokeColor[1] < 255) this.strokeColor[1] += g;
-    	if (this.strokeColor[2] > 0 && this.strokeColor[2] < 255) this.strokeColor[2] += b;
+    	if (this.strokeColor[0] + r >= 0 && this.strokeColor[0] + r <= 255) this.strokeColor[0] += r;
+    	if (this.strokeColor[1] + g >= 0 && this.strokeColor[1] + g <= 255) this.strokeColor[1] += g;
+    	if (this.strokeColor[2] + b >= 0 && this.strokeColor[2] + b <= 255) this.strokeColor[2] += b;
     	System.out.format("%d %d %d\n", this.strokeColor[0],this.strokeColor[1],this.strokeColor[2]);
     }
 }

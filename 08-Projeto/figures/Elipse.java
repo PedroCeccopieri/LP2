@@ -19,12 +19,9 @@ public class Elipse extends Figure {
     public void paint (Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-
-    	if (backgroundColor != null) {    
-			g2d.setColor(new Color(backgroundColor[0],backgroundColor[1],backgroundColor[2]));
-			g2d.fill(new Ellipse2D.Double(this.posx, this.posy, this.width, this.hight));
-		}
-
+    
+		g2d.setColor(new Color(backgroundColor[0],backgroundColor[1],backgroundColor[2]));
+		g2d.fill(new Ellipse2D.Double(this.posx, this.posy, this.width, this.hight));
 		g2d.setStroke(new BasicStroke(this.stroke));
 		g2d.setColor(new Color(strokeColor[0],strokeColor[1],strokeColor[2]));
 		g2d.draw(new Ellipse2D.Double(this.posx, this.posy, this.width, this.hight));

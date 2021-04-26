@@ -15,7 +15,6 @@ class ProjetoApp {
 
 class ProjetoFrame extends JFrame {
     ArrayList<Figure> figs = new ArrayList<Figure>();
-    ArrayList<Figure> points = new ArrayList<Figure>();
     Random rand = new Random();
 
     private int mouseCordx,mouseCordy;
@@ -28,9 +27,10 @@ class ProjetoFrame extends JFrame {
     private boolean strokeN = false;
     private boolean r = false, g = false, b = false;
 
-    ProjetoFrame () {
+    private boolean bdrag = true;
+    private boolean bresize = false;
 
-        createPoints();
+    ProjetoFrame () {
 
         this.addWindowListener (new WindowAdapter() {
                 public void windowClosing (WindowEvent e) {
@@ -40,11 +40,11 @@ class ProjetoFrame extends JFrame {
 
         this.addKeyListener (new KeyAdapter() {
                 public void keyPressed (KeyEvent evt) {
-
+                    
                     if (evt.getKeyChar() == '1') {
                         r = true;
                         g = false;
-                        b = false; 
+                        b = false;
                         System.out.println("vermelho selecionado");
 
                     } else if (evt.getKeyChar() == '2') {
@@ -61,14 +61,18 @@ class ProjetoFrame extends JFrame {
 
                     } else if (evt.getKeyChar() == '4') {
 
-                        if(background || strokeN) {
+                        if(background || strokeN || bdrag || bresize) {
                             background = false;
                             stroke = true;
                             strokeN = false;
+                            bdrag = false;
+                            bresize = false;
                             System.out.println("stroke selecionado");
                         } else if(stroke) {
                             background = true;
                             stroke = false;
+                            bdrag = false;
+                            bresize = false;
                             System.out.println("background selecionado");
                         }
 
@@ -76,6 +80,25 @@ class ProjetoFrame extends JFrame {
                         strokeN = true;
                         background = false;
                         stroke = false;
+                        bdrag = false;
+                        bresize = false;
+
+                    } else if (evt.getKeyChar() == 'q') {
+
+                        if (bdrag || background || strokeN || stroke) {
+                            System.out.println("resize selecionado");
+                            bdrag = false;
+                            bresize = true;
+                            strokeN = false;
+                            background = false;
+                            stroke = false;
+                        }
+
+                        else if (bresize) {
+                            System.out.println("drag selecionado");
+                            bdrag = true;
+                            bresize = false;
+                        }
 
                     } else if (evt.getKeyCode() == 38) { // seta pra cima //
                         if (background) {
@@ -92,6 +115,8 @@ class ProjetoFrame extends JFrame {
 
                         if (strokeN) selectedFigure.changeStroke(1);
 
+                        if (bresize) selectedFigure.resize(0,-1);
+
                     } else if (evt.getKeyCode() == 40) { // seta pra baixo //
                         if (background) {
                             if (r) selectedFigure.changeBackgroundColor(-1,0,0);
@@ -106,8 +131,21 @@ class ProjetoFrame extends JFrame {
                         }
 
                         if (strokeN) selectedFigure.changeStroke(-1);
-                    } repaint();
 
+                        if (bresize) selectedFigure.resize(0,1);
+
+                    } else if (evt.getKeyCode() == 37) {
+                        if (bresize) selectedFigure.resize(-1,0);
+                    } else if (evt.getKeyCode() == 39) {
+                        if (bresize) selectedFigure.resize(1,0);
+                    }
+
+                    if (selectedFigure != null) {
+                        selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
+                        
+                    }
+
+                    repaint();
                 }
 
                 public void keyReleased(KeyEvent evt) {
@@ -126,11 +164,16 @@ class ProjetoFrame extends JFrame {
                     } else if (evt.getKeyChar() == 'e') {
                         figs.add(new Elipse(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
 
+                    } else if (evt.getKeyChar() == 't') {
+                        figs.add(new Triangulo(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+
+                    } else if (evt.getKeyChar() == 'y') {
+                        figs.add(new Line(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+                        
                     } else if (evt.getKeyCode() == 127) { // del //
                         figs.remove(selectedFigure);
                         selectedFigure = null;
                         selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
-                        plotPoints(false);
                     } repaint();
                 }
         });
@@ -150,18 +193,11 @@ class ProjetoFrame extends JFrame {
             }
 
             public void mouseDragged(MouseEvent evt) {
-
-                /*if (isPoint(mouseClickx, mouseClicky)) {
-                    selectedFigure.resize(evt.getX(), evt.getY(),whichPoint(evt.getX(), evt.getY()));
-                }*/
                 
-                if (selectedFigure instanceof Figure) {
+                if (selectedFigure instanceof Figure && bdrag) {
                     selectedFigure.drag(evt.getX(), evt.getY());
-                    selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
-                    plotPoints(true);
-                }
-
-                repaint();
+                    selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0}); 
+                } repaint();
             }
         });
 
@@ -170,10 +206,6 @@ class ProjetoFrame extends JFrame {
     }
 
     private void selectFigure(int x, int y) {
-
-        if (isPoint(x,y)) {
-            return;
-        }
 
         if (!figs.isEmpty()) {
 
@@ -192,67 +224,11 @@ class ProjetoFrame extends JFrame {
                 figs.remove(selectedFigure);
                 figs.add(selectedFigure);
                 selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0});
-                plotPoints(true);
-
+                
             } else {
                 selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
-                plotPoints(false);
             } repaint();
         }
-    }
-
-    private void createPoints () {
-
-        if (selectedFigure == null) {
-
-            Elipse p1 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
-            Elipse p2 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
-            Elipse p3 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
-            Elipse p4 = new Elipse(0,0,0,0,0,null,new int[] {0,0,0});
-            points.add(p1);
-            points.add(p2);
-            points.add(p3);
-            points.add(p4);
-        }
-
-        System.out.println(points.size());
-    }
-
-    private void plotPoints(boolean p) {
-
-        if (p) {
-
-            int x = selectedFigure.getPosx()-5;
-            int y = selectedFigure.getPosy()-5;
-            int w = selectedFigure.getWidth()+5;
-            int h = selectedFigure.getHight()+5;
-
-            points.set(0, new Elipse(x + w/2,y,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
-            points.set(1, new Elipse(x,y + h/2,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
-            points.set(2, new Elipse(x + w/2,y + h,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
-            points.set(3, new Elipse(x + w,y + h/2,5,5,1,new int[] {255,255,255}, new int[] {0,0,0}));
-        } else {
-            points.set(0, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
-            points.set(1, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
-            points.set(2, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
-            points.set(3, new Elipse(0,0,0,0,0,null,new int[] {0,0,0}));
-        }
-    }
-
-    private boolean isPoint(int x, int y) {
-        for (Figure p: this.points) {
-            if (p.getPosx() <= x && x <= p.getPosx() + p.getWidth() && p.getPosy() <= y && y <= p.getPosy() + p.getHight()) { 
-                return true;
-            }
-        } return false;
-    }
-
-    private Figure whichPoint(int x, int y) {
-        for (Figure p: this.points) {
-            if (p.getPosx() <= x && x <= p.getPosx() + p.getWidth() && p.getPosy() <= y && y <= p.getPosy() + p.getHight()) { 
-                return p;
-            }
-        } return null;
     }
 
     public void paint (Graphics g) {
@@ -261,7 +237,5 @@ class ProjetoFrame extends JFrame {
             fig.paint(g);
         }
         if (selectedRect != null) selectedRect.paint(g);
-
-        if (!points.isEmpty()) for (Figure point: this.points) point.paint(g);
     }
 }
