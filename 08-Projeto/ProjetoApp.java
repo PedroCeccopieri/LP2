@@ -27,7 +27,6 @@ class ProjetoFrame extends JFrame {
     private boolean strokeN = false;
     private boolean r = false, g = false, b = false;
 
-    private boolean bdrag = true;
     private boolean bresize = false;
 
     ProjetoFrame () {
@@ -61,17 +60,15 @@ class ProjetoFrame extends JFrame {
 
                     } else if (evt.getKeyChar() == '4') {
 
-                        if(background || strokeN || bdrag || bresize) {
+                        if(background || strokeN || bresize) {
                             background = false;
                             stroke = true;
                             strokeN = false;
-                            bdrag = false;
                             bresize = false;
                             System.out.println("stroke selecionado");
                         } else if(stroke) {
                             background = true;
                             stroke = false;
-                            bdrag = false;
                             bresize = false;
                             System.out.println("background selecionado");
                         }
@@ -80,24 +77,16 @@ class ProjetoFrame extends JFrame {
                         strokeN = true;
                         background = false;
                         stroke = false;
-                        bdrag = false;
                         bresize = false;
 
                     } else if (evt.getKeyChar() == 'q') {
 
-                        if (bdrag || background || strokeN || stroke) {
+                        if (background || strokeN || stroke) {
                             System.out.println("resize selecionado");
-                            bdrag = false;
                             bresize = true;
                             strokeN = false;
                             background = false;
                             stroke = false;
-                        }
-
-                        else if (bresize) {
-                            System.out.println("drag selecionado");
-                            bdrag = true;
-                            bresize = false;
                         }
 
                     } else if (evt.getKeyCode() == 38) { // seta pra cima //
@@ -169,7 +158,7 @@ class ProjetoFrame extends JFrame {
 
                     } else if (evt.getKeyChar() == 'y') {
                         figs.add(new Line(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
-                        
+
                     } else if (evt.getKeyCode() == 127) { // del //
                         figs.remove(selectedFigure);
                         selectedFigure = null;
@@ -194,7 +183,7 @@ class ProjetoFrame extends JFrame {
 
             public void mouseDragged(MouseEvent evt) {
                 
-                if (selectedFigure instanceof Figure && bdrag) {
+                if (selectedFigure instanceof Figure) {
                     selectedFigure.drag(evt.getX(), evt.getY());
                     selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0}); 
                 } repaint();
