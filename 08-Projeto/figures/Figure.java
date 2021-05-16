@@ -1,8 +1,10 @@
 package figures;
 
+import ivisible.*;
+
 import java.awt.Graphics;
 
-public abstract class Figure {
+public abstract class Figure implements IVisible {
 
 	int posx, posy;
     int width, hight;
@@ -30,6 +32,11 @@ public abstract class Figure {
     public void drag(int x, int y) {
     	this.posx = x;
     	this.posy = y;
+    }
+
+    public boolean clicked (int x, int y) {
+    	if (this.posx <= x && x <= this.posx + this.width && this.posy <= y && y <= this.posy + this.hight) return true;
+    	else return false;
     }
 
     public void resize(int dx, int dy) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import figures.*;
+import ivisible.*;
 
 class ProjetoApp {
     public static void main (String[] args) {
@@ -201,7 +202,7 @@ class ProjetoFrame extends JFrame {
             selectedFigure = null;
 
             for (Figure fig: this.figs) {
-                if (fig.getPosx() <= x && x <= fig.getPosx() + fig.getWidth() && fig.getPosy() <= y && y <= fig.getPosy() + fig.getHight()) { 
+                if (fig.clicked(x,y)) {
                     selectedFigure = fig;
                 }
             }
