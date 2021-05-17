@@ -20,9 +20,9 @@ public class Triangulo extends Figure {
 	}
 
 	@Override
-	public void drag(int x, int y) {
-    	this.posx = x;
-    	this.posy = y;
+	public void drag(int dx, int dy) {
+    	this.posx += dx;
+    	this.posy += dy;
     	this.pontosx = new int [] {posx, posx, posx + width};
 		this.pontosy = new int[] {posy, posy + hight, posy + hight};
     }

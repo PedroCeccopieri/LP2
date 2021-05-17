@@ -18,8 +18,8 @@ class ProjetoFrame extends JFrame {
     ArrayList<Figure> figs = new ArrayList<Figure>();
     Random rand = new Random();
 
-    private int mouseCordx,mouseCordy;
-    private int mouseClickx, mouseClicky;
+    private Point mouseCord;
+    private Point mouseClick;
     private Figure selectedFigure;
     private Retangulo selectedRect;
 
@@ -148,17 +148,17 @@ class ProjetoFrame extends JFrame {
                     int b2 = rand.nextInt(255);
 
                     if (evt.getKeyChar() == 'r') {
-                        Retangulo r = new Retangulo(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2});
+                        Retangulo r = new Retangulo((int) mouseCord.getX(),(int) mouseCord.getY(),50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2});
                         figs.add(r);
 
                     } else if (evt.getKeyChar() == 'e') {
-                        figs.add(new Elipse(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+                        figs.add(new Elipse((int) mouseCord.getX(),(int) mouseCord.getY(),50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
 
                     } else if (evt.getKeyChar() == 't') {
-                        figs.add(new Triangulo(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+                        figs.add(new Triangulo((int) mouseCord.getX(),(int) mouseCord.getY(),50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
 
                     } else if (evt.getKeyChar() == 'y') {
-                        figs.add(new Line(mouseCordx,mouseCordy,50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
+                        figs.add(new Line((int) mouseCord.getX(),(int) mouseCord.getY(),50,25,5,new int[] {r1,g1,b1}, new int[] {r2,g2,b2}));
 
                     } else if (evt.getKeyCode() == 127) { // del //
                         figs.remove(selectedFigure);
@@ -170,22 +170,21 @@ class ProjetoFrame extends JFrame {
 
         this.addMouseListener(new MouseAdapter() {
             public void mousePressed (MouseEvent evt) {
-                mouseClickx = evt.getX();
-                mouseClicky = evt.getY();
-                selectFigure(mouseClickx,mouseClicky);
+                mouseClick = evt.getPoint();
+                selectFigure((int) mouseClick.getX(),(int) mouseClick.getY());
             }
         });
 
         this.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved (MouseEvent evt) {
-                mouseCordx = evt.getX();
-                mouseCordy = evt.getY();
+                mouseCord = evt.getPoint();
             }
 
             public void mouseDragged(MouseEvent evt) {
                 
                 if (selectedFigure instanceof Figure) {
-                    selectedFigure.drag(evt.getX(), evt.getY());
+                    selectedFigure.drag((int) (evt.getX() - mouseClick.getX()), (int) (evt.getY() - mouseClick.getY()));
+                    mouseClick = evt.getPoint();
                     selectedRect = new Retangulo(selectedFigure.getPosx()-5,selectedFigure.getPosy()-5,selectedFigure.getWidth()+10,selectedFigure.getHight()+10,2,null,new int[] {255,0,0}); 
                 } repaint();
             }
@@ -217,8 +216,8 @@ class ProjetoFrame extends JFrame {
                 
             } else {
                 selectedRect = new Retangulo(0,0,0,0,0,null,new int[] {0,0,0});
-            } repaint();
-        }
+            } 
+        } repaint();
     }
 
     public void paint (Graphics g) {

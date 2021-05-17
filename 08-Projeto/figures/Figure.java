@@ -29,9 +29,9 @@ public abstract class Figure implements IVisible {
     	return this.hight;
     }
 
-    public void drag(int x, int y) {
-    	this.posx = x;
-    	this.posy = y;
+    public void drag(int dx, int dy) {
+    	this.posx += dx;
+    	this.posy += dy;
     }
 
     public boolean clicked (int x, int y) {
