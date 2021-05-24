@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 import figures.*;
 import ivisible.*;
@@ -32,8 +33,28 @@ class ProjetoFrame extends JFrame {
 
     ProjetoFrame () {
 
+        try {
+            FileInputStream f = new FileInputStream("projeto.bin");
+            ObjectInputStream o = new ObjectInputStream(f);
+            this.figs = (ArrayList<Figure>) o.readObject();
+            o.close();
+        } catch (Exception err) {
+            System.out.println("projeto.bin não existe!");
+        }
+
         this.addWindowListener (new WindowAdapter() {
                 public void windowClosing (WindowEvent e) {
+
+                    try {
+                        FileOutputStream f = new FileOutputStream("projeto.bin");
+                        ObjectOutputStream o = new ObjectOutputStream(f);
+                        o.writeObject(figs);
+                        o.flush();
+                        o.close();
+                    } catch (Exception err) {
+                        System.out.println("não foi possivel salvar em projeto.bin");
+                    }
+
                     System.exit(0);
                 }
         });
@@ -181,7 +202,7 @@ class ProjetoFrame extends JFrame {
             }
 
             public void mouseDragged(MouseEvent evt) {
-                
+
                 if (selectedFigure instanceof Figure) {
                     selectedFigure.drag((int) (evt.getX() - mouseClick.getX()), (int) (evt.getY() - mouseClick.getY()));
                     mouseClick = evt.getPoint();

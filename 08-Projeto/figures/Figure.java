@@ -3,8 +3,9 @@ package figures;
 import ivisible.*;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 
-public abstract class Figure implements IVisible {
+public abstract class Figure implements IVisible, Serializable {
 
 	int posx, posy;
     int width, hight;
@@ -35,8 +36,7 @@ public abstract class Figure implements IVisible {
     }
 
     public boolean clicked (int x, int y) {
-    	if (this.posx <= x && x <= this.posx + this.width && this.posy <= y && y <= this.posy + this.hight) return true;
-    	else return false;
+    	return (this.posx <= x && x <= this.posx + this.width && this.posy <= y && y <= this.posy + this.hight);
     }
 
     public void resize(int dx, int dy) {
