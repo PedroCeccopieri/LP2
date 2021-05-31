@@ -2,9 +2,9 @@ package figures;
 
 import java.awt.*;
 
-public class Retangulo extends Figure {
+public class Linha extends Figure {
 
-    public Retangulo (int posx, int posy, int width, int hight, int stroke, int backgroundColor[], int strokeColor[]) {
+    public Linha (int posx, int posy, int width, int hight, int stroke, int backgroundColor[], int strokeColor[]) {
 
         super();
 
@@ -22,14 +22,15 @@ public class Retangulo extends Figure {
         super.paint(g, focused);
 
     	Graphics2D g2d = (Graphics2D) g;
-
-		g2d.setColor(new Color(backgroundColor[0],backgroundColor[1],backgroundColor[2]));
-		g2d.fillRect(this.posx, this.posy, this.width, this.hight);
+   
 		g2d.setStroke(new BasicStroke(this.stroke));
 		g2d.setColor(new Color(strokeColor[0],strokeColor[1],strokeColor[2]));
-		g2d.drawRect(this.posx, this.posy, this.width, this.hight);
+		g2d.drawLine(this.posx, this.posy, this.posx + this.width, this.posy + this.hight);
+        g2d.setStroke(new BasicStroke(this.stroke/2));
+        g2d.setColor(new Color(backgroundColor[0],backgroundColor[1],backgroundColor[2]));
+        g2d.drawLine(this.posx, this.posy, this.posx + this.width, this.posy + this.hight);
 
-		if (focused) {
+        if (focused) {
             for (rPoint p: this.points) {
                 p.paint(g, false);
             }

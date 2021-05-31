@@ -11,16 +11,16 @@ Selecione a figura e aperte a tecla 'del'.
 
 Para trocar de cor:
 
-Selecione 4 para trocar a cor de fundo ou 5 para trocar a cor de contorno;
+Selecion 4 para alternar entre trocar a cor de fundo e de contorno;
 Selecione 1, 2 ou 3 para mudar o valor da cor vermelho, verde ou azul respectivamente;
 Use as setas para cima e para baixo para aumentar ou diminuir o valor da cor selecionada.
 
 Para redimensionar a figura:
 
-Selecione q para selecionar o modo de redimensionar;
-Use as setas para aumentar ou diminuir o tamanho da figura.
+Selecione a figura desejada;
+Clique em um ponto e arraste com o mouse.
 
 Para mover a figura:
 
-Click na figura desejada;
+Selecione a figura desejada;
 Arraste a figura para onde quiser.

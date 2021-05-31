@@ -4,9 +4,11 @@ import java.awt.*;
 
 public class Triangulo extends Figure {
 
-	int pontosx[], pontosy[];
+	private int pontosx[], pontosy[];
 
 	public Triangulo(int posx, int posy, int width, int hight, int stroke, int backgroundColor[], int strokeColor[]) {
+
+        super();
 
 		this.posx = posx;
 		this.posy = posy;
@@ -19,29 +21,12 @@ public class Triangulo extends Figure {
 		this.strokeColor = strokeColor;
 	}
 
-	@Override
-	public void drag(int dx, int dy) {
-    	this.posx += dx;
-    	this.posy += dy;
-    	this.pontosx = new int [] {posx, posx, posx + width};
+	public void paint (Graphics g, boolean focused) {
+
+		this.pontosx = new int [] {posx, posx, posx + width};
 		this.pontosy = new int[] {posy, posy + hight, posy + hight};
-    }
 
-    @Override
-    public void resize(int dx, int dy) {
-    	if (dx != 0) {
-    		this.width += dx;
-    	}
-
-    	if (dy != 0) {
-    		this.hight += dy;
-    	}
-
-    	this.pontosx = new int [] {posx, posx, posx + width};
-		this.pontosy = new int[] {posy, posy + hight, posy + hight};
-    }
-
-	public void paint (Graphics g) {
+        super.paint(g, focused);
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(new Color(backgroundColor[0],backgroundColor[1],backgroundColor[2]));
@@ -50,5 +35,10 @@ public class Triangulo extends Figure {
 		g2d.setColor(new Color(strokeColor[0],strokeColor[1],strokeColor[2]));
 		g2d.drawPolygon(this.pontosx, this.pontosy, pontosx.length);
 
+		if (focused) {
+            for (rPoint p: this.points) {
+                p.paint(g, false);
+            }
+        }
 	}
 }

@@ -7,6 +7,9 @@ import java.awt.geom.Ellipse2D.Double;
 public class Elipse extends Figure {
 
     public Elipse (int posx, int posy, int width, int hight, int stroke, int backgroundColor[], int strokeColor[]) {
+
+    	super();
+
         this.posx = posx;
         this.posy = posy;
         this.width = width;
@@ -16,7 +19,9 @@ public class Elipse extends Figure {
 		this.strokeColor = strokeColor;
     }
 
-    public void paint (Graphics g) {
+    public void paint (Graphics g, boolean focused) {
+
+        super.paint(g, focused);
 
         Graphics2D g2d = (Graphics2D) g;
     
@@ -25,5 +30,11 @@ public class Elipse extends Figure {
 		g2d.setStroke(new BasicStroke(this.stroke));
 		g2d.setColor(new Color(strokeColor[0],strokeColor[1],strokeColor[2]));
 		g2d.draw(new Ellipse2D.Double(this.posx, this.posy, this.width, this.hight));
+
+		if (focused) {
+            for (rPoint p: this.points) {
+                p.paint(g, false);
+            }
+        }
 	}
 }
