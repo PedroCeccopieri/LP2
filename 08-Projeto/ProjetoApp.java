@@ -42,6 +42,7 @@ class ProjetoFrame extends JFrame {
             this.figs = (ArrayList<Figure>) o.readObject();
             o.close();
         } catch (Exception err) {
+            System.out.println(err);
             System.out.println("projeto.bin não existe!");
         }
 
@@ -65,6 +66,7 @@ class ProjetoFrame extends JFrame {
                         o.flush();
                         o.close();
                     } catch (Exception err) {
+                        System.out.println(err);
                         System.out.println("não foi possivel salvar em projeto.bin");
                     }
 

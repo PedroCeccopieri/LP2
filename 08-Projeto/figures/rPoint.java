@@ -1,10 +1,12 @@
 package figures;
 
+import java.io.Serializable;
+
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Ellipse2D.Double;
 
-public class rPoint {
+public class rPoint implements Serializable {
 
     private int index;
 
