@@ -5,6 +5,8 @@ r = Retangulo
 t = Triangulo
 y = Linha
 
+ou clique no botão com a figura desejada e clique em um lugar vazio na tela.
+
 Remoção de figuras:
 
 Selecione a figura e aperte a tecla 'del'.
@@ -24,3 +26,7 @@ Para mover a figura:
 
 Selecione a figura desejada;
 Arraste a figura para onde quiser.
+
+Deselecionar tudo:
+
+Clicar com o botão direito do mouse.
